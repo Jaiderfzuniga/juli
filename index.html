@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Juli</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Great+Vibes&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: radial-gradient(circle, #22011f 0%, #080007 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Cinzel', serif;
+      overflow: hidden;
+      color: #ffffff;
+    }
+
+    .card-container {
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      height: 680px;
+      background: #110010;
+      border-radius: 28px;
+      box-shadow: 0 0 40px rgba(255, 0, 128, 0.4), inset 0 0 20px rgba(255, 105, 180, 0.15);
+      border: 2px solid rgba(255, 105, 180, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    canvas { 
+      position: absolute;
+      inset: 0;
+      width: 100%; 
+      height: 100%; 
+      display: block; 
+      z-index: 1;
+    }
+
+    /* PANTALLA DE INICIO */
+    .start-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, #1a0017 0%, #0b000a 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+      transition: opacity 0.8s ease, visibility 0.8s;
+      padding: 20px;
+    }
+    .start-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .brand-tag {
+      font-size: 0.8rem;
+      letter-spacing: 5px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    .start-title {
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.2;
+      background: linear-gradient(180deg, #ffffff 0%, #ff99dd 50%, #ff007f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(255, 0, 127, 0.8));
+      letter-spacing: 3px;
+      margin-bottom: 40px;
+      animation: glowTitle 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes glowTitle {
+      0% { filter: drop-shadow(0 0 15px rgba(255, 0, 127, 0.6)); transform: scale(1); }
+      100% { filter: drop-shadow(0 0 25px rgba(255, 105, 180, 0.9)); transform: scale(1.02); }
+    }
+
+    .start-btn {
+      padding: 14px 40px;
+      font-size: 1rem;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, #ff007f, #800040);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 30px;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .start-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.8);
+    }
+
+    /* BOTÓN REGRESAR */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      padding: 8px 18px;
+      font-size: 0.8rem;
+      font-family: inherit;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 105, 180, 0.4);
+      border-radius: 20px;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      display: none;
+    }
+    .back-btn.visible { display: block; }
+    .back-btn:hover {
+      background: rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+    }
+
+    /* BOTÓN CARTA SECRETA */
+    .letter-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+      color: #ffffff;
+      background: rgba(255, 0, 127, 0.3);
+      border: 1px solid rgba(255, 105, 180, 0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+    }
+    .letter-btn.visible { display: flex; }
+    .letter-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.8);
+      background: rgba(255, 0, 127, 0.6);
+    }
+
+    /* MODAL DE LA CARTA */
+    .letter-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 0, 10, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 30;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .letter-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .letter-card {
+      background: linear-gradient(135deg, #1f021c, #2b0026);
+      border: 1px solid rgba(255, 105, 180, 0.4);
+      border-radius: 20px;
+      padding: 30px 25px;
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.4);
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+    }
+    .letter-card h3 {
+      font-size: 1.5rem;
+      color: #ff80df;
+      margin-bottom: 15px;
+      letter-spacing: 2px;
+    }
+    .letter-card p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 15px;
+      min-height: 70px;
+    }
+
+    .letter-signature {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.5rem;
+      color: #ff99dd;
+      text-shadow: 0 0 8px rgba(255, 105, 180, 0.6);
+      margin-bottom: 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .letter-signature.show { opacity: 1; }
+
+    .close-letter-btn {
+      padding: 8px 22px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: #ffffff;
+      background: rgba(255, 0, 127, 0.5);
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .close-letter-btn:hover {
+      background: rgba(255, 0, 127, 0.8);
+    }
+
+    /* CAPA DE TEXTO EN LA SEGUNDA VENTANA */
+    .text-layer {
+      position: absolute;
+      bottom: 40px;
+      z-index: 5;
+      text-align: center;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    .phrase-top {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      background: linear-gradient(180deg, #ffffff 0%, #ff80df 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 12px rgba(255, 0, 128, 0.9));
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .phrase-top.step-1 {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .phrase-bottom {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.8rem;
+      color: #ffffff;
+      text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 30px #ff007f;
+      margin-top: -10px;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .phrase-bottom.step-2 {
+      opacity: 1;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container" id="cardContainer">
+    <button class="back-btn" id="backBtn">← Regresar</button>
+    <button class="letter-btn" id="letterBtn">💌</button>
+
+    <div class="letter-modal" id="letterModal">
+      <div class="letter-card">
+        <h3>Para Juli ✨</h3>
+        <p id="typewriterText"></p>
+        <div class="letter-signature" id="letterSignature">Con cariño, Jaider</div>
+        <button class="close-letter-btn" id="closeLetterBtn">Cerrar</button>
+      </div>
+    </div>
+
+    <div class="start-overlay" id="startOverlay">
+     
+      <div class="start-title">PARA<br>JULI</div>
+      <button class="start-btn" id="startBtn">Abrir ✨</button>
+    </div>
+
+    <div class="text-layer" id="textLayer">
+      <div class="phrase-top" id="phraseTop">Te Quiero</div>
+      <div class="phrase-bottom" id="phraseBottom">Juli</div>
+    </div>
+
+    <canvas id="heartCanvas"></canvas>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+    const bgMusic = document.getElementById('bgMusic');
+    const startOverlay = document.getElementById('startOverlay');
+    const startBtn = document.getElementById('startBtn');
+    const backBtn = document.getElementById('backBtn');
+    const letterBtn = document.getElementById('letterBtn');
+    const letterModal = document.getElementById('letterModal');
+    const closeLetterBtn = document.getElementById('closeLetterBtn');
+    const cardContainer = document.getElementById('cardContainer');
+    
+    const phraseTop = document.getElementById('phraseTop');
+    const phraseBottom = document.getElementById('phraseBottom');
+    const typewriterText = document.getElementById('typewriterText');
+    const letterSignature = document.getElementById('letterSignature');
+
+    let animationStarted = false;
+    let timer1, timer2;
+
+    let mouseX = 0, mouseY = 0;
+    const extraParticles = [];
+    let heartPulseBonus = 0;
+    let shockwaves = [];
+
+    // Lluvia de corazones de fondo
+    const rainHearts = [];
+    for (let i = 0; i < 15; i++) {
+      rainHearts.push({
+        x: Math.random() * 500,
+        y: Math.random() * 680,
+        size: Math.random() * 8 + 6,
+        speed: Math.random() * 0.8 + 0.4,
+        alpha: Math.random() * 0.4 + 0.1,
+        swing: Math.random() * 2,
+        swingSpeed: Math.random() * 0.03 + 0.01
+      });
+    }
+
+    // Efecto Typewriter (Escribiendo)
+    const fullMessage = "Solo quería crear algo único para ti. Espero que esta sorpresa llene tu día de luz y te recuerde lo especial que eres.";
+    let typeInterval = null;
+
+    function startTypewriter() {
+      typewriterText.innerHTML = "";
+      letterSignature.classList.remove('show');
+      let i = 0;
+      typeInterval = setInterval(() => {
+        if (i < fullMessage.length) {
+          typewriterText.innerHTML += fullMessage.charAt(i);
+          i++;
+        } else {
+          clearInterval(typeInterval);
+          letterSignature.classList.add('show');
+        }
+      }, 35);
+    }
+
+    // Parallax y Giroscopio en Móviles
+    function handlePointerMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      const px = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      const py = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+      
+      mouseX = (px - rect.width / 2) * 0.05;
+      mouseY = (py - rect.height / 2) * 0.05;
+
+      if (animationStarted) {
+        for (let i = 0; i < 2; i++) {
+          extraParticles.push({
+            x: px + (Math.random() - 0.5) * 8,
+            y: py + (Math.random() - 0.5) * 8,
+            vx: (Math.random() - 0.5) * 1,
+            vy: Math.random() * -1 - 0.5,
+            size: Math.random() * 2 + 1,
+            alpha: 1,
+            color: `#ff99dd`
+          });
+        }
+      }
+    }
+
+    cardContainer.addEventListener('mousemove', handlePointerMove);
+    cardContainer.addEventListener('touchmove', handlePointerMove);
+
+    window.addEventListener('deviceorientation', (e) => {
+      if (e.gamma !== null && e.beta !== null) {
+        mouseX = e.gamma * 0.1; // Inclinación lateral
+        mouseY = e.beta * 0.1;  // Inclinación vertical
+      }
+    });
+
+    cardContainer.addEventListener('click', (e) => {
+      if (!animationStarted) return;
+      const rect = canvas.getBoundingClientRect();
+      const px = e.clientX - rect.left;
+      const py = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2 - 50;
+
+      const dist = Math.hypot(px - centerX, py - centerY);
+      if (dist < 100) {
+        heartPulseBonus = 2.5;
+        shockwaves.push({ x: centerX, y: centerY, radius: 10, alpha: 1 });
+        addExplosion(centerX, centerY);
+      }
+    });
+
+    function addExplosion(x, y) {
+      for (let i = 0; i < 35; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 2;
+        extraParticles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 3 + 1,
+          alpha: 1,
+          color: `hsl(${320 + Math.random() * 40}, 100%, 75%)`
+        });
+      }
+    }
+
+    startBtn.addEventListener('click', () => {
+      const rect = canvas.getBoundingClientRect();
+      addExplosion(rect.width / 2, rect.height / 2);
+
+      startOverlay.classList.add('hidden');
+      backBtn.classList.add('visible');
+      letterBtn.classList.add('visible');
+      bgMusic.play().catch(err => console.log("Audio:", err));
+      animationStarted = true;
+
+      timer1 = setTimeout(() => phraseTop.classList.add('step-1'), 500);
+      timer2 = setTimeout(() => phraseBottom.classList.add('step-2'), 1500);
+    });
+
+    backBtn.addEventListener('click', () => {
+      animationStarted = false;
+      startOverlay.classList.remove('hidden');
+      backBtn.classList.remove('visible');
+      letterBtn.classList.remove('visible');
+      letterModal.classList.remove('open');
+      clearInterval(typeInterval);
+      
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      phraseTop.classList.remove('step-1');
+      phraseBottom.classList.remove('step-2');
+
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+    });
+
+    letterBtn.addEventListener('click', () => {
+      letterModal.classList.add('open');
+      startTypewriter();
+    });
+
+    closeLetterBtn.addEventListener('click', () => {
+      letterModal.classList.remove('open');
+      clearInterval(typeInterval);
+    });
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const stars = [];
+    for (let i = 0; i < 85; i++) {
+      stars.push({
+        x: Math.random() * 500,
+        y: Math.random() * 680,
+        size: Math.random() * 2 + 0.5,
+        alpha: Math.random(),
+        speed: Math.random() * 0.02 + 0.005,
+        depth: Math.random() * 0.6 + 0.4,
+        isCross: Math.random() > 0.8
+      });
+    }
+
+    let shootingStar = null;
+    setInterval(() => {
+      if (Math.random() > 0.3) {
+        shootingStar = {
+          x: Math.random() * 300,
+          y: Math.random() * 200,
+          length: Math.random() * 80 + 40,
+          speed: Math.random() * 8 + 6,
+          alpha: 1
+        };
+      }
+    }, 4000);
+
+    const heartParticles = [];
+    function heartFunction(t) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+      return { x, y };
+    }
+
+    for (let i = 0; i < 700; i++) {
+      const t = Math.random() * Math.PI * 2;
+      const pos = heartFunction(t);
+      heartParticles.push({
+        baseX: pos.x,
+        baseY: pos.y,
+        size: Math.random() * 2.5 + 1,
+        color: `hsl(${320 + Math.random() * 30}, 100%, ${65 + Math.random() * 25}%)`,
+        offset: Math.random() * Math.PI * 2
+      });
+    }
+
+    let ringAngle = 0;
+
+    function render(time) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2 - 50;
+
+      // Estrellas con Parallax
+      stars.forEach(s => {
+        s.alpha += s.speed;
+        if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+        
+        const sx = s.x + mouseX * s.depth;
+        const sy = s.y + mouseY * s.depth;
+
+        ctx.fillStyle = `rgba(255, 230, 255, ${Math.abs(s.alpha)})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (s.isCross) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${Math.abs(s.alpha) * 0.5})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(sx - 4, sy); ctx.lineTo(sx + 4, sy);
+          ctx.moveTo(sx, sy - 4); ctx.lineTo(sx, sy + 4);
+          ctx.stroke();
+        }
+      });
+
+      // Lluvia de corazones pequeños
+      rainHearts.forEach(rh => {
+        rh.y += rh.speed;
+        rh.swing += rh.swingSpeed;
+        const hx = rh.x + Math.sin(rh.swing) * 10;
+        if (rh.y > canvas.height) rh.y = -10;
+
+        ctx.fillStyle = `rgba(255, 105, 180, ${rh.alpha})`;
+        ctx.font = `${rh.size}px Arial`;
+        ctx.fillText("❤", hx, rh.y);
+      });
+
+      if (shootingStar) {
+        shootingStar.x += shootingStar.speed;
+        shootingStar.y += shootingStar.speed * 0.6;
+        shootingStar.alpha -= 0.015;
+
+        if (shootingStar.alpha <= 0) {
+          shootingStar = null;
+        } else {
+          ctx.strokeStyle = `rgba(255, 200, 255, ${shootingStar.alpha})`;
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.moveTo(shootingStar.x, shootingStar.y);
+          ctx.lineTo(shootingStar.x - shootingStar.length, shootingStar.y - shootingStar.length * 0.6);
+          ctx.stroke();
+        }
+      }
+
+      for (let i = shockwaves.length - 1; i >= 0; i--) {
+        const sw = shockwaves[i];
+        sw.radius += 3;
+        sw.alpha -= 0.025;
+        if (sw.alpha <= 0) {
+          shockwaves.splice(i, 1);
+        } else {
+          ctx.strokeStyle = `rgba(255, 105, 180, ${sw.alpha})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      for (let i = extraParticles.length - 1; i >= 0; i--) {
+        const p = extraParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.02;
+
+        if (p.alpha <= 0) {
+          extraParticles.splice(i, 1);
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      if (animationStarted) {
+        ringAngle += 0.01;
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(ringAngle);
+        ctx.strokeStyle = "rgba(255, 105, 180, 0.25)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 160, 45, Math.PI / 4, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        if (heartPulseBonus > 0) heartPulseBonus -= 0.05;
+        const scale = 9 + Math.sin(time * 0.003) * 0.7 + heartPulseBonus;
+
+        heartParticles.forEach(p => {
+          const pulseOffset = Math.sin(time * 0.005 + p.offset) * 1.8;
+          const x = centerX + (p.baseX * scale) + pulseOffset;
+          const y = centerY + (p.baseY * scale) + pulseOffset;
+
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = '#ff007f';
+          ctx.beginPath();
+          ctx.arc(x, y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>

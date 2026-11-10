@@ -14,10 +14,9 @@
   function $(id) { return document.getElementById(id); }
 
   var scene = $('scene'), phrase = $('phrase'), phraseTop = $('phraseTop'), hint = $('hint');
-  var startBtn = $('startBtn'), backBtn = $('backBtn'), letterBtn = $('letterBtn'), soundBtn = $('soundBtn');
+  var startBtn = $('startBtn'), backBtn = $('backBtn'), letterBtn = $('letterBtn');
   var heartHit = $('heartHit');
   var letter = $('letter'), note = $('note'), noteText = $('noteText'), noteSign = $('noteSign'), closeLetterBtn = $('closeLetterBtn');
-  var audio = $('bgMusic');
 
   var started = false, touched = false, letterOpen = false;
   var timers = [], typeTimer = 0, fullText = '';
@@ -66,32 +65,12 @@
     document.title = name ? 'Para ' + name : 'Para ti';
   }
 
-  /* ---------- Música (opcional: si el archivo no existe, todo sigue en silencio) ---------- */
-  function setSound(on) {
-    soundBtn.setAttribute('aria-pressed', String(on));
-    soundBtn.setAttribute('aria-label', on ? 'Silenciar música' : 'Activar música');
-  }
-  function playMusic() {
-    var src = Gift.config.musica;
-    if (!src) { soundBtn.hidden = true; return; }
-    if (audio.getAttribute('src') !== src) audio.setAttribute('src', src);
-    audio.volume = 0.7;
-    var p = audio.play();
-    if (p && p.then) p.then(function () { soundBtn.hidden = false; setSound(true); }, function () { soundBtn.hidden = true; });
-  }
-  audio.addEventListener('error', function () { soundBtn.hidden = true; });
-  soundBtn.addEventListener('click', function () {
-    if (audio.paused) { audio.play().then(function () { setSound(true); }, function () {}); }
-    else { audio.pause(); setSound(false); }
-  });
-
   /* ---------- 1 → 2 ---------- */
   function start() {
     if (started) return;
     started = true; touched = false;
     document.body.classList.remove('is-gate');
     FX.assemble();
-    playMusic();
     later(function () { phrase.classList.add('is-in'); }, reduce ? 300 : 1100);
     later(function () { phrase.classList.add('is-static'); }, 5200);
     later(function () { if (!touched) hint.classList.add('is-on'); }, 4200);
@@ -107,8 +86,6 @@
     phrase.classList.remove('is-in', 'is-static');
     hint.classList.remove('is-on');
     FX.scatter();
-    audio.pause();
-    try { audio.currentTime = 0; } catch (e) { /* aún sin cargar */ }
     startBtn.focus({ preventScroll: true });
   }
 

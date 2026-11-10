@@ -1,0 +1,202 @@
+/* ============================================================
+   app.css — portada, corazón y carta
+   Toda la paleta sale de un solo tono (--h), que cambia el tema.
+   El panel de edición vive en editor.css.
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --h: 328;                                   /* lo sobrescribe js/main.js */
+  --bg-0: hsl(var(--h) 85% 9%);
+  --bg-1: hsl(var(--h) 90% 2.5%);
+  --accent: hsl(var(--h) 100% 60%);
+  --accent-soft: hsl(var(--h) 100% 80%);
+  --ink: hsl(var(--h) 70% 97%);
+  --dim: hsl(var(--h) 40% 80%);
+  --on-accent: hsl(var(--h) 90% 7%);
+  --panel: hsl(var(--h) 55% 8%);
+  --line: hsl(var(--h) 100% 72% / .34);
+
+  --font-display: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --font-script: 'Pinyon Script', 'Segoe Script', cursive;
+  --font-ui: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg-1);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+::selection { background: var(--accent); color: var(--on-accent); }
+:focus-visible { outline: 2px solid var(--accent-soft); outline-offset: 4px; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* ---------- Escena ---------- */
+.scene {
+  position: fixed; inset: 0; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 42%, var(--bg-0) 0%, var(--bg-1) 70%);
+  transition: right .35s var(--ease-out);
+  touch-action: none;
+}
+#space { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.ui { position: absolute; inset: 0; pointer-events: none; }
+.ui button { pointer-events: auto; }
+.gate, .show { position: absolute; inset: 0; transition: opacity .6s ease-out, visibility 0s; }
+
+/* ---------- 1. Portada ---------- */
+.gate {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px;
+  padding: 24px; text-align: center;
+}
+.gate__title { display: flex; flex-direction: column; align-items: center; }
+.gate__for {
+  font: 400 clamp(2.4rem, 9vw, 3.6rem)/1 var(--font-script);
+  color: var(--accent-soft); margin-bottom: -.12em; position: relative; z-index: 1;
+}
+.gate__name {
+  --len: 4;
+  font: 700 min(6rem, calc(84vw / (var(--len) * .78)))/1.05 var(--font-display);
+  letter-spacing: .06em; margin-right: -.06em; text-transform: uppercase; white-space: nowrap;
+  color: var(--ink);
+  text-shadow: 0 6px 34px hsl(var(--h) 100% 55% / .75);
+}
+body:not(.is-gate) .gate { opacity: 0; visibility: hidden; transition: opacity .5s ease-out, visibility 0s .5s; }
+.gate > * { transition: transform .7s var(--ease-out), filter .5s ease-out; }
+body:not(.is-gate) .gate > * { transform: scale(1.12); filter: blur(8px); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 50px; padding: 0 34px; border-radius: 999px;
+  font: 700 .98rem/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase;
+  background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 12px 30px -10px hsl(var(--h) 100% 50% / .8);
+  transition: transform .2s var(--ease-out), filter .2s ease-out, background .2s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.12); }
+.btn:active { transform: scale(.97); transition-duration: .08s; }
+.btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); min-height: 44px; padding: 0 26px; font-size: .82rem; }
+.btn--ghost:hover { background: hsl(var(--h) 100% 60% / .18); filter: none; transform: none; }
+
+/* ---------- 2. Corazón ---------- */
+.is-gate .show { opacity: 0; visibility: hidden; transition: opacity .3s ease-out, visibility 0s .3s; }
+.bar {
+  position: absolute; inset: 0 0 auto; display: flex; align-items: center; gap: 10px;
+  padding: max(16px, env(safe-area-inset-top)) 16px 0;
+}
+.bar__gap { flex: 1; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 44px; padding: 0 16px 0 12px; border-radius: 999px;
+  font: 500 .92rem/1 var(--font-ui); color: var(--ink);
+  background: hsl(var(--h) 60% 8% / .72);
+  box-shadow: inset 0 0 0 1px var(--line);
+  transition: background .2s, transform .2s var(--ease-out);
+}
+.chip svg { width: 20px; height: 20px; flex: none; }
+.chip:hover { background: hsl(var(--h) 100% 55% / .3); }
+.chip:active { transform: scale(.96); }
+.chip--icon { width: 44px; padding: 0; justify-content: center; }
+.chip[hidden] { display: none; }
+.chip[aria-pressed="true"] .i-off, .chip[aria-pressed="false"] .i-on { display: none; }
+
+.heart-hit {
+  position: absolute; border-radius: 50%; transform: translate(-50%, -50%);
+  cursor: pointer; touch-action: manipulation;
+}
+.heart-hit:focus-visible { outline-offset: -6px; }
+
+.phrase {
+  position: absolute; inset: auto 0 max(4.5vh, 20px); padding: 0 16px;
+  text-align: center; pointer-events: none;
+}
+.phrase__top {
+  font: 700 clamp(1.25rem, 5.4vw, 2.1rem)/1.2 var(--font-display);
+  letter-spacing: .16em; margin-right: -.16em; text-transform: uppercase;
+  color: var(--ink); text-shadow: 0 3px 18px hsl(var(--h) 100% 50% / .9);
+}
+.letter-ch { display: inline-block; white-space: pre; opacity: 0; transform: translateY(.5em) scale(1.4); filter: blur(6px); }
+.is-in .letter-ch {
+  opacity: 1; transform: none; filter: blur(0);
+  transition: opacity .6s ease-out, transform .8s var(--ease-out), filter .6s ease-out;
+  transition-delay: calc(var(--i) * 55ms);
+}
+.phrase__name {
+  font: 400 clamp(3.2rem, 15vw, 5.8rem)/1.15 var(--font-script);
+  color: var(--ink); white-space: nowrap;
+  text-shadow: 0 4px 26px hsl(var(--h) 100% 55% / .95);
+  margin-top: -.08em; padding: 0 .2em;
+  clip-path: inset(-30% 100% -30% 0); opacity: 0;
+}
+.is-in .phrase__name {
+  clip-path: inset(-30% 0 -30% 0); opacity: 1;
+  transition: clip-path 1.5s cubic-bezier(.6, 0, .2, 1) var(--name-delay, .9s), opacity .3s linear var(--name-delay, .9s);
+}
+.is-static .letter-ch, .is-static .phrase__name { transition: none; }
+
+.hint {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font: 500 .92rem/1 var(--font-ui); color: var(--dim);
+  padding: 9px 14px; border-radius: 999px; background: hsl(var(--h) 60% 6% / .7);
+  opacity: 0; transition: opacity .6s ease-out; pointer-events: none; white-space: nowrap;
+}
+.hint.is-on { opacity: 1; }
+
+/* ---------- 3. Carta ---------- */
+.letter { position: fixed; z-index: 9000; inset: 0; display: grid; place-items: center; padding: 18px; }
+.letter[hidden] { display: none; }
+.letter > * { grid-area: 1 / 1; }
+.letter__backdrop { position: absolute; inset: 0; background: hsl(var(--h) 80% 2% / .78); opacity: 0; transition: opacity .35s ease-out; }
+.letter.is-open .letter__backdrop { opacity: 1; }
+.note {
+  position: relative; width: min(410px, 100%); max-height: calc(100dvh - 36px); overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  padding: 34px 28px 26px; border-radius: 16px;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--line), 0 34px 70px -22px #000, 0 18px 60px -30px var(--accent);
+  display: flex; flex-direction: column;
+  transform-origin: var(--ox, 50%) var(--oy, 0%);
+  transform: scale(.12); opacity: 0;
+  transition: transform .26s ease-in, opacity .2s ease-in;
+}
+.letter.is-open .note { transform: none; opacity: 1; transition: transform .6s var(--ease-out), opacity .3s ease-out; }
+.note__title {
+  font: 700 clamp(1.3rem, 5.6vw, 1.6rem)/1.2 var(--font-display); letter-spacing: .06em;
+  color: var(--accent-soft); text-align: center; text-wrap: balance; overflow-wrap: anywhere;
+}
+.note__text {
+  margin-top: 18px; min-height: 5.1em;
+  font: 400 1.02rem/1.7 var(--font-ui); color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap;
+  cursor: default;
+}
+.note__text.is-typing::after {
+  content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -.16em;
+  background: var(--accent-soft); animation: caret .8s steps(1) infinite;
+}
+@keyframes caret { 50% { opacity: 0; } }
+.note__sign {
+  margin-top: 14px; text-align: right;
+  font: 400 2rem/1.3 var(--font-script); color: var(--accent-soft);
+  opacity: 0; transform: translateY(8px); transition: opacity .7s ease-out, transform .9s var(--ease-out);
+}
+.note__sign.is-on { opacity: 1; transform: none; }
+.note .btn { align-self: center; margin-top: 22px; }
+
+@media (max-height: 520px) {
+  .phrase__name { font-size: clamp(2.2rem, 12vh, 3.4rem); }
+  .gate { gap: 20px; }
+}
+
+/* Movimiento reducido (clase puesta por store.js) */
+.reduce .letter-ch, .reduce .is-in .letter-ch { transform: none; filter: none; transition: opacity .4s ease-out; transition-delay: calc(var(--i) * 25ms); }
+.reduce .is-in .phrase__name { transition: opacity .6s ease-out .4s; clip-path: none; }
+.reduce .gate > *, .reduce .note { transition: opacity .25s ease-out; transform: none; filter: none; }
+.reduce body:not(.is-gate) .gate > * { transform: none; filter: none; }
+.reduce .btn:hover { transform: none; }
+.reduce .note__text.is-typing::after { animation: none; }

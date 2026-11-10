@@ -102,9 +102,6 @@ body:not(.is-gate) .gate > * { transform: scale(1.12); filter: blur(8px); }
 .chip svg { width: 20px; height: 20px; flex: none; }
 .chip:hover { background: hsl(var(--h) 100% 55% / .3); }
 .chip:active { transform: scale(.96); }
-.chip--icon { width: 44px; padding: 0; justify-content: center; }
-.chip[hidden] { display: none; }
-.chip[aria-pressed="true"] .i-off, .chip[aria-pressed="false"] .i-on { display: none; }
 
 .heart-hit {
   position: absolute; border-radius: 50%; transform: translate(-50%, -50%);

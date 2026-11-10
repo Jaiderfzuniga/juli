@@ -3,7 +3,7 @@
 Una página-regalo: un polvo de estrellas se junta y forma un corazón que late.
 Huye de tu dedo, se convierte en palabras cuando lo tocas y guarda una carta.
 Una misma página sirve para muchas personas: cada una recibe su propio enlace con
-su nombre, sus textos, su color y su canción.
+su nombre, sus textos, su color y su tipo de letra.
 
 ## Cómo se vive
 
@@ -22,16 +22,12 @@ No hace falta tocar código.
    `https://TU-USUARIO.github.io/juli/?editar`
 2. Cambia nombre, color, tipo de letra (seis juegos, también la que dibuja el
    corazón), textos de portada, frase, palabras que forma el corazón
-   (una por línea, hasta 4), carta, firma y canción. Todo se ve al instante.
+   (una por línea, hasta 4), carta y firma. Todo se ve al instante.
    Escribe `{nombre}` en cualquier texto y se reemplaza por el nombre.
 3. Pulsa **Copiar enlace** y envíaselo. Esa persona ve la página final, sin editor.
 
 El contenido viaja dentro del propio enlace (después de `#d=`), así que no se guarda en
 ningún servidor. El borrador del editor se guarda solo en tu navegador.
-
-**Música**: sube un `.mp3` a este repositorio (por defecto se busca `musica.mp3`) o pega
-el enlace directo a un `.mp3`. Si el archivo no existe, la página funciona en silencio
-y el botón de sonido no aparece.
 
 ## Cambiar el contenido por defecto
 

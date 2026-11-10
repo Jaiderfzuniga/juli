@@ -15,7 +15,6 @@ window.GIFT_DEFAULTS = {
   cartaTexto:
     'Solo quería crear algo único para ti. Espero que esta sorpresa llene tu día de luz y te recuerde lo especial que eres.',
   firma: 'Con cariño, Jaider',
-  musica: 'musica.mp3',
   tema: 'rosa',
   letra: 'clasica',
 };
@@ -67,13 +66,4 @@ window.GIFT_FIELDS = [
   { key: 'cartaTitulo', label: 'Título', max: 30 },
   { key: 'cartaTexto', label: 'Mensaje', type: 'area', max: 500 },
   { key: 'firma', label: 'Firma', max: 30 },
-
-  { grupo: 'Música' },
-  {
-    key: 'musica',
-    label: 'Canción (archivo o enlace)',
-    type: 'url',
-    max: 300,
-    ayuda: 'Sube un .mp3 al repositorio y escribe su nombre (por ejemplo musica.mp3), o pega un enlace directo a un .mp3. Si no existe, la página funciona en silencio.',
-  },
 ];

@@ -28,6 +28,7 @@
   var pointer = { x: -999, y: -999, on: false, nx: 0, ny: 0 };
   var par = { x: 0, y: 0 };
   var raf = 0, last = 0, layoutCb = null;
+  var textFont = { family: "'Cinzel', Georgia, serif", weight: 700 };
 
   function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -120,11 +121,11 @@
     var off = document.createElement('canvas');
     off.width = bw; off.height = bh;
     var g = off.getContext('2d');
-    var family = '"Cinzel", Georgia, serif';
-    g.font = '700 100px ' + family;
+    var family = textFont.family;
+    g.font = textFont.weight + ' 100px ' + family;
     var widest = Math.max.apply(null, lines.map(function (l) { return g.measureText(l).width; }));
     var fs = Math.min((bw * 0.96) / widest * 100, (bh * 0.8) / lines.length);
-    g.font = '700 ' + fs + 'px ' + family;
+    g.font = textFont.weight + ' ' + fs + 'px ' + family;
     g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#fff';
     lines.forEach(function (l, i) { g.fillText(l, bw / 2, bh / 2 + (i - (lines.length - 1) / 2) * fs * 1.08); });
 
@@ -359,6 +360,11 @@
   /* ---------- API ---------- */
   window.HeartFX = {
     setHue: function (h) { hue = h; makeSprites(); },
+    /* Cambia la letra con la que el corazón escribe (y re-dibuja la palabra actual). */
+    setFont: function (family, weight) {
+      textFont = { family: family, weight: weight || 700 };
+      if (mode === 'text' && currentWord) textPts = sampleText(currentWord);
+    },
     setWords: function (list) {
       words = list.slice(0, 4); wordIndex = -1;
       if (mode === 'text') showHeart();
@@ -400,7 +406,4 @@
   resize();
   run();
   // Cuando llega la tipografía, las palabras se vuelven a muestrear con la letra correcta.
-  if (document.fonts && document.fonts.load) {
-    document.fonts.load('700 40px Cinzel').then(function () { if (mode === 'text' && currentWord) textPts = sampleText(currentWord); });
-  }
 })();

@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Manrope:wght@400;500;700&family=Pinyon+Script&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css">
-  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/app.css?v=2026-11-10">
+  <link rel="stylesheet" href="css/editor.css?v=2026-11-10">
 </head>
 <body class="is-gate">
 
@@ -22,10 +22,10 @@
       <!-- 1. Portada -->
       <section class="gate" id="gate">
         <h1 class="gate__title">
-          <span class="gate__for" data-t="portada"></span>
+          <span class="gate__for" data-t="portada">Para</span>
           <span class="gate__name" data-t="para"></span>
         </h1>
-        <button class="btn" id="startBtn" type="button"><span data-t="botonAbrir"></span></button>
+        <button class="btn" id="startBtn" type="button"><span data-t="botonAbrir">Abrir</span></button>
       </section>
 
       <!-- 2. Corazón -->
@@ -65,11 +65,12 @@
     </article>
   </div>
 
-  <!-- Orden: contenido → lectura del enlace → partículas → escena → editor -->
-  <script src="js/config.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/heart.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/editor.js"></script>
+  <!-- ?v= obliga al celular a bajar los archivos nuevos: cámbialo al publicar cambios.
+       Orden: contenido → lectura del enlace → partículas → escena → editor -->
+  <script src="js/config.js?v=2026-11-10"></script>
+  <script src="js/store.js?v=2026-11-10"></script>
+  <script src="js/heart.js?v=2026-11-10"></script>
+  <script src="js/main.js?v=2026-11-10"></script>
+  <script src="js/editor.js?v=2026-11-10"></script>
 </body>
 </html>

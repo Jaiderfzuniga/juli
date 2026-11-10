@@ -20,7 +20,8 @@ No hace falta tocar código.
 
 1. Abre la página con `?editar` al final de la dirección, por ejemplo
    `https://TU-USUARIO.github.io/juli/?editar`
-2. Cambia nombre, color, textos de portada, frase, palabras que forma el corazón
+2. Cambia nombre, color, tipo de letra (seis juegos, también la que dibuja el
+   corazón), textos de portada, frase, palabras que forma el corazón
    (una por línea, hasta 4), carta, firma y canción. Todo se ve al instante.
    Escribe `{nombre}` en cualquier texto y se reemplaza por el nombre.
 3. Pulsa **Copiar enlace** y envíaselo. Esa persona ve la página final, sin editor.

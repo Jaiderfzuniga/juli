@@ -49,6 +49,7 @@
     var theme = Gift.themes[cfg.tema] || Gift.themes[Gift.defaults.tema];
     document.documentElement.style.setProperty('--h', theme.hue);
     FX.setHue(theme.hue);
+    Gift.applyFont(cfg.letra).then(function (f) { if (f) FX.setFont(f.titulo, f.peso); });
 
     Array.prototype.forEach.call(document.querySelectorAll('[data-t]'), function (n) {
       n.textContent = Gift.text(cfg, n.getAttribute('data-t'));
